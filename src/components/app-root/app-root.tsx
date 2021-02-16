@@ -1,11 +1,20 @@
-import { Component, h } from '@stencil/core';
+import { Component, h, State } from '@stencil/core';
 
 @Component({
   tag: 'app-root',
   styleUrl: 'app-root.css',
-  shadow: true,
 })
 export class AppRoot {
+  @State() showContent = false;
+
+  private toggleSlot(): void {
+    this.showContent = !this.showContent;
+  }
+
+  componentWillRender() {
+    console.log('app-root', 'showContent', this.showContent);
+  }
+
   render() {
     return (
       <div>
@@ -14,12 +23,8 @@ export class AppRoot {
         </header>
 
         <main>
-          <stencil-router>
-            <stencil-route-switch scrollTopOffset={0}>
-              <stencil-route url="/" component="app-home" exact={true} />
-              <stencil-route url="/profile/:name" component="app-profile" />
-            </stencil-route-switch>
-          </stencil-router>
+          <play-container>{this.showContent && <play-content slot="s1"></play-content>}</play-container>
+          <button onClick={() => this.toggleSlot()}>{this.showContent ? 'Hide' : 'Show'}</button>
         </main>
       </div>
     );
